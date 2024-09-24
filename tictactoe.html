@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tictactoe</title>
+    <style>
+        :root{
+            --square_size:10vmin;
+            --XO_size:10vmin;
+        }
+        @media screen and (max-width:462px){
+            :root{
+                --square_size:12vmax;
+                --XO_size:12vmax;
+            }
+        }
+        .page{
+            position:absolute;
+            display:grid;
+            grid-template-columns: repeat(var(--columns),var(--square_size));
+            grid-template-rows: repeat(var(--rows),var(--square_size));
+        }
+        .square{
+            width:var(--square_size) ;
+            height:var(--square_size);
+            border:2px solid black;
+            background:white;
+            font-size: var(--XO_size);
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            user-select:none;   
+            transition: 0.25s;
+        }
+        @keyframes fade-in {
+            from{
+                opacity:0;
+                scale:0;
+            }
+            to{
+                opacity:1;
+                scale:1;
+            }
+            
+        }
+        .X{
+            color:red;
+            animation: 0.2s fade-in;
+        }
+        .O{
+            color:green;
+            animation:0.2s fade-in;
+        }
+        .recent{
+            background:gold;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="page">
+
+    </div>
+</body>
+<script>
+    let Xsturn=true;//true means it's X, false means O
+    const page=document.querySelector('.page');
+    let columns=100;
+    let rows=100;
+    page.style.setProperty('--columns',columns);
+    page.style.setProperty('--rows',rows);
+    //^^set number of rows and columns of page^^^
+    window.oncontextmenu=e=>{e.preventDefault()};
+    let id=0;
+    for(let i=0;i<columns*rows;i++){
+        const square=document.createElement('div');
+        square.classList.add('square');
+        square.id=id.toString();
+        id++;
+        square.ondblclick=()=>{remove_icon(square)};
+        square.onmousedown=(e)=>{
+        if(e.button==0)
+            draw_icon(square)
+        if(e.button==2)
+            remove_icon(square);
+        };
+        page.appendChild(square);
+    }
+let squares=page.querySelectorAll('div');
+let last_square=0;
+let fresh=true;
+let occupied=[];
+window.onkeydown=e=>{
+if(!fresh)
+if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');console.log('mi reset');})
+};
+    function draw_icon(square){
+        fresh=false;
+    if(square.textContent==''){
+        squares[last_square].classList.remove('recent');
+        square.classList.add('recent');
+        last_square=JSON.parse(square.id);
+        if(Xsturn){
+        square.classList.remove('O');
+        square.classList.add('X');
+        square.textContent='X';
+    }
+        else{
+        square.classList.remove('X');
+        square.classList.add('O');
+        square.textContent='O';
+        }
+    Xsturn=!Xsturn;
+    }
+    }
+    function remove_icon(square){
+    if(square.textContent!='' && square.classList.contains('recent')){
+        Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
+     square.textContent='';
+     square.classList.remove('recent');
+ 
+    }
+        
+    }
+function handle_game(){
+
+}
+
+</script>
+</html>
