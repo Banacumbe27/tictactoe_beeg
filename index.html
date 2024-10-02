@@ -1,228 +1,228 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tictactoe</title>
-    <style>
-        :root{
-            --square_size:10vmin;
-            --XO_size:10vmin;
-        }
-        @media screen and (max-width:462px){
-            :root{
-                --square_size:12vmax;
-                --XO_size:12vmax;
-            }
-        }
-        .page{
-            position:absolute;
-            display:grid;
-            grid-template-columns: repeat(var(--columns),var(--square_size));
-            grid-template-rows: repeat(var(--rows),var(--square_size));
-        }
-        .square{
-            width:var(--square_size) ;
-            height:var(--square_size);
-            border:2px solid black;
-            background:white;
-            font-size: var(--XO_size);
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            user-select:none;   
-            transition: 0.25s;
-        }
-        @keyframes fade-in {
-            from{
-                opacity:0;
-                scale:0;
-            }
-            to{
-                opacity:1;
-                scale:1;
-            }
-            
-        }
-        .X{
-            color:red;
-            animation: 0.2s fade-in;
-        }
-        .O{
-            color:green;
-            animation:0.2s fade-in;
-        }
-        .recent{
-            background:gold;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="page">
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>tictactoe</title>
+		<style>
+			:root{
+				--square_size:10vmin;
+				--XO_size:10vmin;
+			}
+			@media screen and (max-width:462px){
+				:root{
+					--square_size:12vmax;
+					--XO_size:12vmax;
+				}
+			}
+			.page{
+				position:absolute;
+				display:grid;
+				grid-template-columns: repeat(var(--columns),var(--square_size));
+				grid-template-rows: repeat(var(--rows),var(--square_size));
+			}
+			.square{
+				width:var(--square_size) ;
+				height:var(--square_size);
+				border:2px solid black;
+				background:white;
+				font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+				text-align: center;
+				user-select:none;   
+				transition: 0.25s;
+			}
+			@keyframes fade-in {
+				from{
+					opacity:0;
+					scale:0;
+				}
+				to{
+					opacity:1;
+					scale:1;
+				}
+				
+			}
+			.X{
+				color:red;
+				animation: 0.2s fade-in;
+			}
+			.O{
+				color:green;
+				animation:0.2s fade-in;
+			}
+			.recent{
+				background:gold;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="page">
 
-    </div>
-</body>
-<script>
-    let Xsturn=true;//true means it's X, false means O
-    const page=document.querySelector('.page');
-    let columns=100;
-    let rows=100;
-	let winning_amount=4;//meaning 5 adjacent to win
-    page.style.setProperty('--columns',columns);
-    page.style.setProperty('--rows',rows);
-    //^^set number of rows and columns of page^^^
-    window.oncontextmenu=e=>{e.preventDefault()};
-    let id=0;
-    for(let i=0;i<columns*rows;i++){
-        const square=document.createElement('div');
-        square.classList.add('square');
-        square.id=id.toString();
-        id++;
-		square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
-        square.onmousedown=(e)=>{
-        if(e.button==0)
-            draw_icon(square);
-			handle_game(square);
-        if(e.button==2)
-            remove_icon(square);
-        };
-        page.appendChild(square);
-    }
-let squares=page.querySelectorAll('div');
-let last_square=0;
-let fresh=true;
-let occupied=[];
-window.onkeydown=e=>{
-if(!fresh)
-if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');})
-};
-    function draw_icon(square){
-        fresh=false;
-    if(square.textContent==''){
-        squares[last_square].classList.remove('recent');
-        square.classList.add('recent');
-        last_square=JSON.parse(square.id);
-        if(Xsturn){
-        square.classList.remove('O');
-        square.classList.add('X');
-        square.textContent='X';
-    }
-        else{
-        square.classList.remove('X');
-        square.classList.add('O');
-        square.textContent='O';
-        }
-    Xsturn=!Xsturn;
-    }
-    }
-    function remove_icon(square){
-    if(square.textContent!='' && square.classList.contains('recent')){
-    /*    Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
-     square.textContent='';
-     square.classList.remove('recent');
- 
-    }
-        */
-    }
-let winning={state:false,team:'x'};
-let winning_coordinates;
-let type;
-function handle_game(square){
-let square_id=JSON.parse(square.id);
-let x=xcursor=square_id%rows;
-let y=ycursor=(square_id-x)/columns;
- type=square.textContent?square.textContent:"";
-let adjacent_symbols=0;
-let consecutives=check_for_consecutives(x,y,type);
- winning_coordinates=[{x:x,y:y}];
-//check vertially
-//up
-if(type=='X' || type=='O'){
-if(!winning.state)adjacent_symbols=0;
+		</div>
+	</body>
+	<script>
+		let Xsturn=true;//true means it's X, false means O
+		const page=document.querySelector('.page');
+		let columns=100;
+		let rows=100;
+		let winning_amount=4;//meaning 5 adjacent to win
+		page.style.setProperty('--columns',columns);
+		page.style.setProperty('--rows',rows);
+		//^^set number of rows and columns of page^^^
+		window.oncontextmenu=e=>{e.preventDefault()};
+		let id=0;
+		for(let i=0;i<columns*rows;i++){
+			const square=document.createElement('div');
+			square.classList.add('square');
+			square.id=id.toString();
+			id++;
+			square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
+			square.onmousedown=(e)=>{
+			if(e.button==0)
+				draw_icon(square);
+				handle_game(square);
+			if(e.button==2)
+				remove_icon(square);
+			};
+			page.appendChild(square);
+		}
+	let squares=page.querySelectorAll('div');
+	let last_square=0;
+	let fresh=true;
+	let occupied=[];
+	window.onkeydown=e=>{
+	if(!fresh)
+	if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');})
+	};
+		function draw_icon(square){
+			fresh=false;
+		if(square.textContent==''){
+			squares[last_square].classList.remove('recent');
+			square.classList.add('recent');
+			last_square=JSON.parse(square.id);
+			if(Xsturn){
+			square.classList.remove('O');
+			square.classList.add('X');
+			square.textContent='X';
+		}
+			else{
+			square.classList.remove('X');
+			square.classList.add('O');
+			square.textContent='O';
+			}
+		Xsturn=!Xsturn;
+		}
+		}
+		function remove_icon(square){
+		/*if(square.textContent!='' && square.classList.contains('recent')){
+			Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
+		 square.textContent='';
+		 square.classList.remove('recent');
+	 
+		}
+			*/
+		}
+	let winning={state:false,team:'x'};
+	let winning_coordinates;
+	let type;
+	function handle_game(square){
+	let square_id=JSON.parse(square.id);
+	let x=xcursor=square_id%rows;
+	let y=ycursor=(square_id-x)/columns;
+	 type=square.textContent?square.textContent:"";
+	let adjacent_symbols=0;
+	let consecutives=check_for_consecutives(x,y,type);
+	 winning_coordinates=[{x:x,y:y}];
+	//check vertially
+	//up
+	if(type=='X' || type=='O'){
+	if(!winning.state)adjacent_symbols=0;
 
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[1]){ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-//down
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[6]){ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-if(!winning.state)adjacent_symbols=0;
-//check horizontally if vertical hasnt won
-//left
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[3]){xcursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-//right
-xcursor=x;ycursor=y;
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[1]){ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	//down
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[6]){ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	if(!winning.state)adjacent_symbols=0;
+	//check horizontally if vertical hasnt won
+	//left
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[3]){xcursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	//right
+	xcursor=x;ycursor=y;
 
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[4]){xcursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-if(!winning.state)adjacent_symbols=0;
-//check diagonally left-right if above scenarios hasnt won
-//upleft
-xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[4]){xcursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	if(!winning.state)adjacent_symbols=0;
+	//check diagonally left-right if above scenarios hasnt won
+	//upleft
+	xcursor=x;ycursor=y;
 
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[0]){xcursor--;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-//down right
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[7]){xcursor++;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-if(!winning.state)adjacent_symbols=0;
-//check diagonally right to left
-//to right up
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[2]){xcursor++;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-xcursor=x;ycursor=y;
-while(true){
-if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-else break;
-}
-if(!winning.state)adjacent_symbols=0;
-}
-}
-function win(){
-winning.state=true;
-win.team=type;
-for(let i=0;i<5;i++)
-squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
-}
-function check_for_consecutives(x,y,type){
-let result=[]; 			//0 1 2
-for(let i=0;i<8;i++){   //3 x 4 result
-						//5 6 7
-let compared_type=move_place(x,y,i)>=0?squares[move_place(x,y,i)].textContent:'';
-result.push(compared_type==type);
-}
-return result;
-}
-function move_place(x,y,pos){
-if(pos==0)return (y-1)*columns+x-1;
-if(pos==1)return (y-1)*columns+x;
-if(pos==2)return (y-1)*columns+x+1;
-if(pos==3)return (y)*columns+x-1;
-if(pos==4)return (y)*columns+x+1;
-if(pos==5)return (y+1)*columns+x-1;
-if(pos==6)return (y+1)*columns+x;
-if(pos==7)return (y+1)*columns+x+1;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[0]){xcursor--;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	//down right
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[7]){xcursor++;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	if(!winning.state)adjacent_symbols=0;
+	//check diagonally right to left
+	//to right up
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[2]){xcursor++;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	if(!winning.state)adjacent_symbols=0;
+	}
+	}
+	function win(){
+	winning.state=true;
+	win.team=type;
+	for(let i=0;i<5;i++)
+	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
+	}
+	function check_for_consecutives(x,y,type){
+	let result=[]; 			//0 1 2
+	for(let i=0;i<8;i++){   //3 x 4 result
+							//5 6 7
+	let compared_type=move_place(x,y,i)>=0?squares[move_place(x,y,i)].textContent:'';
+	result.push(compared_type==type);
+	}
+	return result;
+	}
+	function move_place(x,y,pos){
+	if(pos==0)return (y-1)*columns+x-1;
+	if(pos==1)return (y-1)*columns+x;
+	if(pos==2)return (y-1)*columns+x+1;
+	if(pos==3)return (y)*columns+x-1;
+	if(pos==4)return (y)*columns+x+1;
+	if(pos==5)return (y+1)*columns+x-1;
+	if(pos==6)return (y+1)*columns+x;
+	if(pos==7)return (y+1)*columns+x+1;
 
 
-}
-</script>
-</html>
+	}
+	</script>
+	</html>
