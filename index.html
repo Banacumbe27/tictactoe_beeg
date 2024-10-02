@@ -78,7 +78,7 @@
         square.classList.add('square');
         square.id=id.toString();
         id++;
-        square.ondblclick=(e)=>{e.preventDefault();remove_icon(square);};
+		square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
         square.onmousedown=(e)=>{
         if(e.button==0)
             draw_icon(square);
@@ -117,12 +117,12 @@ if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.re
     }
     function remove_icon(square){
     if(square.textContent!='' && square.classList.contains('recent')){
-        Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
+    /*    Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
      square.textContent='';
      square.classList.remove('recent');
  
     }
-        
+        */
     }
 let winning={state:false,team:'x'};
 let winning_coordinates;
@@ -195,7 +195,6 @@ if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent
 else break;
 }
 if(!winning.state)adjacent_symbols=0;
-console.log(adjacent_symbols);
 }
 }
 function win(){
