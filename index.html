@@ -78,7 +78,7 @@
 			square.classList.add('square');
 			square.id=id.toString();
 			id++;
-			square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
+			square.ontouchend=()=>{draw_icon(square);};
 			square.onmousedown=(e)=>{
 			if(e.button==0)
 				draw_icon(square);
