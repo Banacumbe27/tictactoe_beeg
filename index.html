@@ -78,7 +78,7 @@
 			square.classList.add('square');
 			square.id=id.toString();
 			id++;
-	
+			square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
 			square.onmousedown=(e)=>{
 			if(e.button==0)
 				draw_icon(square);
@@ -198,7 +198,7 @@
 	}
 	}
 	function win(){
-	winning.state=true;
+	//winning.state=true;
 	win.team=type;
 	for(let i=0;i<5;i++)
 	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
