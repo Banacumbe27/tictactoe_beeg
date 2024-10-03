@@ -35,7 +35,7 @@
 			@keyframes fade-in {
 				from{
 					opacity:0;
-					scale:0;
+					scale:10;
 				}
 				to{
 					opacity:1;
@@ -78,7 +78,6 @@
 			square.classList.add('square');
 			square.id=id.toString();
 			id++;
-			square.ontouchend=()=>{e.preventDefault();draw_icon(square);};
 			square.onmousedown=(e)=>{
 			if(e.button==0)
 				draw_icon(square);
