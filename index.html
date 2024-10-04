@@ -15,6 +15,9 @@
 					--XO_size:12vmax;
 				}
 			}
+			body{
+			margin:0;
+			}
 			.page{
 				position:absolute;
 				display:grid;
@@ -46,28 +49,99 @@
 			.X{
 				color:red;
 				animation: 0.2s fade-in;
+				
 			}
 			.O{
 				color:green;
-				animation:0.2s fade-in;
+				animation:0.2s fade-in;	
 			}
 			.recent{
 				background:gold;
 			}
+			.scoreboard{
+			position:fixed;
+			z-index:1000;
+			top:5vh;
+			left:10vw;
+			border-radius:30%;
+			width:80vw;
+			height:20vh;
+			backdrop-filter:blur(10px);
+			text-align:center;
 			
+			}
+			.scoreboard pre{
+					font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+			}
+			@keyframes rainbow{
+			0%{background:red;}
+			14%{background:orange;}
+			28%{background:yellow;}
+			42%{background:lime;}
+			56%{background:cyan;}
+			70%{background:blue;}
+			84%{background:violet;}
+			100%{background:purple;}
+			}
+			@keyframes evaporate{
+			from{scale:1;
+			filter:blur(0);
+			opacity:1;
+			}
+			to{
+			scale:10;
+			filter:blur(20px);
+			transform:translateY(0%);
+			opacity:0;
+			}
+			}
+			.delete{
+			animation:1s evaporate forwards;
+			}
+			.undoButton{
+			position:fixed;
+			background:white;
+			border:2px solid black;
+			border-radius:10%;
+			width:fit-content;
+			height:fit-content;
+			padding:none;
+			bottom:5vh;
+			right:5vw;
+			z-index:1000;
+							font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+				text-align:center;
+					cursor:pointer;
+					user-select:none;
+					transition-duration:0.5s;
+			}
+			.undoButton:active{
+			scale:0.4;
+			}
+			.hideUndo{
+			bottom:-30vh;
+			}
 		</style>
 	</head>
 	<body>
+
+	<!--<div class='scoreboard'>    --!>
+	<div class='undoButton' onclick='remove_icon()'>UNDO</div>	
+	
 		<div class="page">
 
 		</div>
 	</body>
 	<script>
+	let winning={state:false,team:'x'};
+	
 		let Xsturn=true;//true means it's X, false means O
 		const page=document.querySelector('.page');
 		let columns=100;
 		let rows=100;
-		let winning_amount=4;//meaning 5 adjacent to win
+		let winning_amount=4;//n meaning n+1 adjacent to win example winning_amount=4 => 5 adjacent to win
 		page.style.setProperty('--columns',columns);
 		page.style.setProperty('--rows',rows);
 		//^^set number of rows and columns of page^^^
@@ -82,8 +156,6 @@
 			if(e.button==0)
 				draw_icon(square);
 				handle_game(square);
-			if(e.button==2)
-				remove_icon(square);
 			};
 			page.appendChild(square);
 		}
@@ -91,10 +163,14 @@
 	let last_square=0;
 	let fresh=true;
 	let occupied=[];
+	let lastturn=false//false means its O's turn;
 	window.onkeydown=e=>{
 	if(!fresh)
 	if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');})
 	};
+		const undoButton=document.querySelector('.undoButton');
+		
+		
 		function draw_icon(square){
 			fresh=false;
 		if(square.textContent==''){
@@ -112,18 +188,32 @@
 			square.textContent='O';
 			}
 		Xsturn=!Xsturn;
+		if(lastturn==Xsturn){
+		undoButton.classList.remove('hideUndo');
+		}
+	winning.state=false;
+		
 		}
 		}
-		function remove_icon(square){
-		/*if(square.textContent!='' && square.classList.contains('recent')){
-			Xsturn=square.textContent=='X'?true:square.textContent=='O'?false:false;
-		 square.textContent='';
-		 square.classList.remove('recent');
-	 
+		function remove_icon(){
+		target=squares[last_square];
+		if(target.textContent!='' && target.classList.contains('recent')){
+			Xsturn=target.textContent=='X'?true:target.textContent=='O'?false:false;
+		lastturn=Xsturn;
+		console.log(lastturn);	
+		 target.classList.remove('recent');
+		 target.classList.remove('X');
+		 target.classList.remove('O');
+		 
+		 target.classList.add('delete');
+		setTimeout(()=>{ 
+		 target.textContent='';
+		 target.classList.remove('delete');
+		 },1000);
 		}
-			*/
+		if(!winning.state)
+		undoButton.classList.add('hideUndo');
 		}
-	let winning={state:false,team:'x'};
 	let winning_coordinates;
 	let type;
 	function handle_game(square){
@@ -137,7 +227,7 @@
 	//check vertially
 	//up
 	if(type=='X' || type=='O'){
-	if(!winning.state)adjacent_symbols=0;
+adjacent_symbols=0;
 
 	xcursor=x;ycursor=y;
 	while(true){
@@ -150,7 +240,9 @@
 	if(check_for_consecutives(xcursor,ycursor,type)[6]){ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
 	else break;
 	}
-	if(!winning.state)adjacent_symbols=0;
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
 	//check horizontally if vertical hasnt won
 	//left
 	xcursor=x;ycursor=y;
@@ -165,7 +257,9 @@
 	if(check_for_consecutives(xcursor,ycursor,type)[4]){xcursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
 	else break;
 	}
-	if(!winning.state)adjacent_symbols=0;
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
 	//check diagonally left-right if above scenarios hasnt won
 	//upleft
 	xcursor=x;ycursor=y;
@@ -180,7 +274,9 @@
 	if(check_for_consecutives(xcursor,ycursor,type)[7]){xcursor++;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
 	else break;
 	}
-	if(!winning.state)adjacent_symbols=0;
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
 	//check diagonally right to left
 	//to right up
 	xcursor=x;ycursor=y;
@@ -193,14 +289,20 @@
 	if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
 	else break;
 	}
-	if(!winning.state)adjacent_symbols=0;
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
 	}
 	}
 	function win(){
-	//winning.state=true;
+	winning.state=true;
+	last_square=0;
 	win.team=type;
-	for(let i=0;i<5;i++)
+	for(let i=0;i<=winning_amount;i++){
 	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
+	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.animation='2s rainbow infinite';
+	squares[last_square].classList.remove('recent');
+	}
 	}
 	function check_for_consecutives(x,y,type){
 	let result=[]; 			//0 1 2
