@@ -133,6 +133,7 @@
 			bottom:5vh;
 			right:5vw;
 			z-index:1000;
+			animation:1s unhide forwards;
 							font-size: var(--XO_size);
 				font-family: 'Courier New', Courier, monospace;
 				text-align:center;
@@ -142,8 +143,16 @@
 			}
 				}
 					.hideUndo{
-			opacity:0;
+			animation:1s hide forwards;
 			}
+			}
+			@keyframes hide{
+			from{transform:translateY(0);}
+			to{transform:translateY(100%);}
+			}
+			@keyframes unhide{
+			from{transform:translateY(0);}
+			to{transform:translateY(100%);}
 			}
 		</style>
 	</head>
