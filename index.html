@@ -222,7 +222,6 @@
 			square.classList.add('square');
 			square.id=id.toString();
 			id++;
-			square.ontouchstart=()=>{closeSettings();};
 			square.onmousedown=(e)=>{
 				if(!settings_opened){
 				draw_icon(square);
