@@ -173,8 +173,8 @@
 				position:fixed;
 				backdrop-filter: blur(20px);
 				-webkit-backdrop-filter: blur(20px);
-				width:30vw;
-				height:40vh;
+				width:fit-content;
+				height:40vmin;
 				transform:translateX(-200%);
 				z-index:1000;	
 				transition-duration:1s;
@@ -294,8 +294,8 @@
 		const settingsPanel=document.querySelector('.settingsPanel');
 		//settingsPanel.ontouchstart=settingsPanel.onclick=()=>{closeSettings();};
 		const settingsButton=document.querySelector('.settings');
-		const features=['timer','amount to win'];
-		const types=['checkbox','number']
+		const features=['timer','amount to win(2-9)'];
+		const types=['checkbox','text']
 		
 		 for(let i=0;i<features.length;i++){
 			let checkbox=document.createElement('input');
@@ -304,35 +304,45 @@
 			label.classList.add('font');
 			checkbox.id=features[i];
 			checkbox.type=types[i];
-			if(checkbox.id=='amount to win'){
-				checkbox.value=5;
-				checkbox.min=2;
+			if(checkbox.id==features[1]){
+				checkbox.value=5;//default amount to win
+				checkbox.onclick=()=>{checkbox.value='';}
+				checkbox.onkeydown=()=>{checkbox.value='';}
 			}
 			checkbox.classList.add('checkbox');
-			checkbox.oninput=()=>{toggle(checkbox)};
+			checkbox.oninput=()=>{toggle(checkbox);};
 			settingsPanel.appendChild(checkbox);
 			settingsPanel.appendChild(label);
 
 		} 
 		function openSettings(){
 			settings_opened=true;
+			
 			settingsButton.style.transform='translateX(-100%)';
 			settingsPanel.style.transform='translateX(0)';
 		}
+		let settingsElements=settingsPanel.querySelectorAll('input');
 		function closeSettings(){
 			settings_opened=false;
 			settingsButton.style.transform='translateX(0)';
 			settingsPanel.style.transform='translateX(-200%)';
+			if(settingsElements[1].value==''||settingsElements[1].value!=Number)settingsElements[1].value=5; //this is the amount to win settings
 		}
 		function toggle(thing){
 			switch(thing.id){
-				case 'timer':
+				case features[0]:
 				break;
-				case 'amount to win':
-				winning_amount=thing.value-1;
+				case features[1]:
+				winning_amount=Math.min(Math.max(thing.value,2),9)-1;
+				if(thing.value!='')
+				thing.value=winning_amount+1;
 				break;
 			}
 		}
+		window.onload=()=>{
+			let dimensions=document.body.getBoundingClientRect();
+			window.scrollTo(dimensions.width/2,dimensions.height/2);
+		};
 	let winning_coordinates;
 	let type;
 	function handle_game(square){
