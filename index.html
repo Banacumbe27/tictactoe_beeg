@@ -45,11 +45,14 @@
 				.X{
 					color:red;
 					animation: 0.2s fade-in;
+					pointer-events: none;
 					
 				}
 				.O{
 					color:green;
-					animation:0.2s fade-in;	
+					animation:0.2s fade-in;
+					pointer-events: none;
+
 				}
 				.recent{
 					background:gold;
@@ -209,6 +212,7 @@
 		let settings_opened=false;
 			let Xsturn=true;//true means it's X, false means O
 			const page=document.querySelector('.page');
+			page.onmousedown=()=>{if(settings_opened)closeSettings();}
 			let columns=100;
 			let rows=100;
 			let winning_amount=4;//n meaning n+1 adjacent to win example winning_amount=4 => 5 adjacent to win
@@ -275,7 +279,6 @@
 			if(target.textContent!='' && target.classList.contains('recent')){
 				Xsturn=target.textContent=='X'?true:target.textContent=='O'?false:false;
 			lastturn=Xsturn;
-			console.log(lastturn);	
 			target.classList.remove('recent');
 			target.classList.remove('X');
 			target.classList.remove('O');
