@@ -326,7 +326,11 @@
 			settings_opened=false;
 			settingsButton.style.transform='translateX(0)';
 			settingsPanel.style.transform='translateX(-200%)';
-			if(settingsElements[1].value==''||settingsElements[1].value!=Number)settingsElements[1].value=5; //this is the amount to win settings
+			
+			if(!isNaN(settingsElements[1].value)){
+			if(settingsElements[1].value==''||JSON.parse(settingsElements[1].value)>9 ||JSON.parse(settingsElements[1].value)<2)settingsElements[1].value=5; //this is the amount to win settings
+			}
+			else if(isNaN(settingsElements[1].value))settingsElements[1].value=5;
 		}
 		function toggle(thing){
 			switch(thing.id){
@@ -346,6 +350,7 @@
 	let winning_coordinates;
 	let type;
 	function handle_game(square){
+	if(square.textContent!=''){
 	let square_id=JSON.parse(square.id);
 	let x=xcursor=square_id%rows;
 	let y=ycursor=(square_id-x)/columns;
@@ -422,6 +427,7 @@ adjacent_symbols=0;
 	 winning_coordinates=[{x:x,y:y}];
 	
 	}
+}
 	}
 	function win(){
 	winning.state=true;
