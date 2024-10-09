@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppOpen</title>
+    <style>
+        body{
+            overflow:hidden;
+        }
+        .appIcon {
+            width: 10vmax;
+            height: 10vmax;
+            border-radius: 10%;
+            top:0;
+            left:0; 
+            position: absolute;
+            background-size: cover;
+            transition: top 0.25s ease,left 0.25s ease, scale 0.5s ease,opacity 1s ease;
+            user-select: none;
+        }
+        .appIcon:active{
+            scale:0.7;
+        }
+        .appIcon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius:10%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0;
+            transition:opacity 1s;
+        }
+        
+        .appIcon:active::before {
+            opacity: 0.7;
+            transition:opacity 0.1s;
+        }
+        .appWindow{
+            position:absolute;
+            width:99vw;
+            height:99vh;
+            opacity:0;
+            top:0;
+            left:0;
+            scale:0;
+            transition:opacity 1s ease,scale 0.5s;
+            font-size:100px;
+            z-index:1000;
+            background:white;
+            user-select:none;
+        }
+        .invisible{
+            pointer-events: none;
+
+        }
+        .closeButton{
+            position:absolute;
+            top:5vmin;
+            right:5vmin;
+            min-width:5vmin;
+            min-height:5vmin;
+            height:fit-content;
+            width:fit-content;
+            opacity:0.2;
+            display:none;
+            background:red;
+            border-radius: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            color:darkred;
+            font-size:2vmax;
+            text-align: center;
+            z-index:10000;
+        }
+        .closeButton:hover::before{
+            content:'Close';
+            
+        }
+        .closeButton:hover{
+            border:2px solid black;
+            opacity:0.5;
+        }
+        .closeButton:active{
+            border:none;
+            opacity:1;
+
+
+        }
+    </style>
+</head>
+<body>
+    <div class="closeButton"></div>
+        <iframe class="appWindow" src=""></iframe>
+
+</body>
+<script>
+    const vmax=Math.max(window.innerWidth,window.innerHeight);
+    const closeButton=document.querySelector('.closeButton');
+    closeButton.onmouseup=closeButton.ontouchend=()=>{
+        closeApp();
+    }
+    const appWindow=document.querySelector('.appWindow');
+    let filePaths=['mathhp.html','mathhp.html','mathhp.html','mathhp.html'];
+    let iconPaths=['settingsIcon.webp','mathhp.webp']
+    let numberOfApps=filePaths.length;
+    let openedId=0;
+    let appGrid={
+        gap:`${(vmax-(numberOfApps*vmax/10))/(numberOfApps+1)}`,
+    };
+    for(let i=0;i<numberOfApps;i++){
+    const appIcon=document.createElement('div');
+    appIcon.classList.add('appIcon');
+    if(iconPaths.length>i){
+    appIcon.style.backgroundImage=`url(${iconPaths[i]})`;
+    }
+    else{
+        appIcon.style.backgroundImage='url(default.webp)';
+    }
+    appIcon.style.left=2*i*appGrid.gap+'px';
+    appIcon.id=i;
+    appIcon.onmouseup=appIcon.ontouchend=(e)=>{
+        openApp(appIcon);
+    };
+    document.body.appendChild(appIcon);
+    }
+    const appIcons=document.querySelectorAll('.appIcon');
+    function openApp(appIcon){
+        openedId=appIcon.id;
+        closeButton.style.display='inline';
+    appWindow.src=filePaths[JSON.parse(appIcon.id)];
+     appIcon.style.left=(window.innerWidth/2)-(appIcon.clientWidth/2)+'px';
+     appIcon.style.top=(window.innerHeight/2)-(appIcon.clientHeight/2)+'px';
+     appIcon.style.scale='5';
+     appIcon.style.opacity='0';
+     appIcon.style.pointerEvents='none';
+     setTimeout(()=>{
+     appWindow.style.scale='1';
+     appWindow.style.opacity='1';},100);
+
+};
+    function closeApp(){
+        closeButton.style.display='none';
+        let appIcon=appIcons[JSON.parse(openedId)];
+        appIcon.style.pointerEvents='auto';
+        appWindow.style.scale='0';
+        appWindow.style.opacity='0';
+     appIcon.style.scale='1';
+     appIcon.style.opacity='1';
+     setTimeout(()=>{
+        appIcon.style.left=2*JSON.parse(appIcon.id)*appGrid.gap+'px';
+     appIcon.style.top=0;
+
+
+    },200);
+    }
+
+    </script>
+</html>

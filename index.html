@@ -1,463 +1,351 @@
-		<!DOCTYPE html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>tictactoe</title>
-			<style>
-				:root{
-					--square_size:15vmin;
-					--XO_size:15vmin;
-				}
-				
-				body{
-				margin:0;
-				}
-				.page{
-					position:absolute;
-					display:grid;
-					grid-template-columns: repeat(var(--columns),var(--square_size));
-					grid-template-rows: repeat(var(--rows),var(--square_size));
-				}
-				.square{
-					width:var(--square_size) ;
-					height:var(--square_size);
-					border:2px solid black;
-					background:white;
-					font-size: var(--XO_size);
-					font-family: 'Courier New', Courier, monospace;
-					text-align: center;
-					user-select:none;   
-					transition: 0.25s;
-					
-				}
-				@keyframes fade-in {
-					from{
-						opacity:0;
-						scale:10;
-					}
-					to{
-						opacity:1;
-						scale:1;
-					}
-					
-				}
-				.X{
-					color:red;
-					animation: 0.2s fade-in;
-					pointer-events: none;
-					
-				}
-				.O{
-					color:green;
-					animation:0.2s fade-in;
-					pointer-events: none;
-
-				}
-				.recent{
-					background:gold;
-				}
-				.scoreboard{
-				position:fixed;
-				z-index:1000;
-				top:5vh;
-				left:10vw;
-				border-radius:30%;
-				width:80vw;
-				height:20vh;
-				backdrop-filter:blur(10px);
-				text-align:center;
-				
-				}
-				.scoreboard pre{
-						font-size: var(--XO_size);
-					font-family: 'Courier New', Courier, monospace;
-				}
-				.font{
-					font-size: 5vmin;
-					font-family: 'Courier New', Courier, monospace;
-				}
-				@keyframes rainbow{
-				0%{background:red;pointer-events: none;}
-				14%{background:orange;pointer-events: none;}
-				28%{background:yellow;pointer-events: none;}
-				42%{background:lime;pointer-events: none;}
-				56%{background:cyan;pointer-events: none;}
-				70%{background:blue;pointer-events: none;}
-				84%{background:violet;pointer-events: none;}
-				100%{background:purple;pointer-events: none;}
-				}
-				@keyframes evaporate{
-				from{scale:1;
-				filter:blur(0);
-				opacity:1;
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>tictactoe</title>
+		<style>
+			:root{
+				--square_size:10vmin;
+				--XO_size:10vmin;
+			}
+			
+			body{
+			margin:0;
+			}
+			.page{
+				position:absolute;
+				display:grid;
+				grid-template-columns: repeat(var(--columns),var(--square_size));
+				grid-template-rows: repeat(var(--rows),var(--square_size));
+			}
+			.square{
+				width:var(--square_size) ;
+				height:var(--square_size);
+				border:2px solid black;
+				background:white;
+				font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+				text-align: center;
+				user-select:none;   
+				transition: 0.25s;
+			}
+			@keyframes fade-in {
+				from{
+					opacity:0;
+					scale:10;
 				}
 				to{
-				scale:10;
-				filter:blur(20px);
-				transform:translateY(0%);
-				opacity:0;
+					opacity:1;
+					scale:1;
 				}
-				}
-				.delete{
-				animation:1s evaporate forwards;
-				}
-				.undoButton{
-				position:fixed;
-				background:white;
-				border:2px solid black;
-				border-radius:10%;
-				width:fit-content;
-				height:fit-content;
-				padding:none;
-				bottom:5vh;
-				right:5vw;
-				z-index:1000;
-								font-size: var(--XO_size);
-					font-family: 'Courier New', Courier, monospace;
-					text-align:center;
-						cursor:pointer;
-						user-select:none;
-						transition-duration:0.5s;
-				}
-				.undoButton:active{
-				scale:0.4;
-				}
-				.hideUndo{
-				bottom:-30vh;
-				}
-				@media screen and (max-width:462px){
-					:root{
-						--square_size:15vmax;
-						--XO_size:15vmax;
-						.undoButton{
-				position:fixed;
-				background:white;
-				border:2px solid black;
-				border-radius:10%;
-				width:fit-content;
-				height:fit-content;
-				padding:none;
-				bottom:5vh;
-				right:5vw;
-				z-index:1000;
-								font-size: var(--XO_size);
-					font-family: 'Courier New', Courier, monospace;
-					text-align:center;
-						cursor:pointer;
-						user-select:none;
-						transition-duration:0.5s;
-				}
-					}
-						.hideUndo{
-				display:none;
-				}
-				}
-				.settings{
-					position:fixed;
-					top:0;
-					left:0;
-					width:fit-content;
-					height:fit-content;
-					font-family: 'Courier New', Courier, monospace;
+				
+			}
+			.X{
+				color:red;
+				animation: 0.2s fade-in;
+				
+			}
+			.O{
+				color:green;
+				animation:0.2s fade-in;	
+			}
+			.recent{
+				background:gold;
+			}
+			.scoreboard{
+			position:fixed;
+			z-index:1000;
+			top:5vh;
+			left:10vw;
+			border-radius:30%;
+			width:80vw;
+			height:20vh;
+			backdrop-filter:blur(10px);
+			text-align:center;
+			
+			}
+			.scoreboard pre{
 					font-size: var(--XO_size);
-					z-index:1000;
-					user-select:none;
+				font-family: 'Courier New', Courier, monospace;
+			}
+			@keyframes rainbow{
+			0%{background:red;}
+			14%{background:orange;}
+			28%{background:yellow;}
+			42%{background:lime;}
+			56%{background:cyan;}
+			70%{background:blue;}
+			84%{background:violet;}
+			100%{background:purple;}
+			}
+			@keyframes evaporate{
+			from{scale:1;
+			filter:blur(0);
+			opacity:1;
+			}
+			to{
+			scale:10;
+			filter:blur(20px);
+			transform:translateY(0%);
+			opacity:0;
+			}
+			}
+			.delete{
+			animation:1s evaporate forwards;
+			}
+			.undoButton{
+			position:fixed;
+			background:white;
+			border:2px solid black;
+			border-radius:10%;
+			width:fit-content;
+			height:fit-content;
+			padding:none;
+			bottom:5vh;
+			right:5vw;
+			z-index:1000;
+							font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+				text-align:center;
 					cursor:pointer;
-					transition-duration: 1s;
+					user-select:none;
+					transition-duration:0.5s;
+			}
+			.undoButton:active{
+			scale:0.4;
+			}
+			.hideUndo{
+			bottom:-30vh;
+			}
+			@media screen and (max-width:462px){
+				:root{
+					--square_size:40vmax;
+					--XO_size:40vmax;
+					.undoButton{
+			position:fixed;
+			background:white;
+			border:2px solid black;
+			border-radius:10%;
+			width:fit-content;
+			height:fit-content;
+			padding:none;
+			bottom:5vh;
+			right:5vw;
+			z-index:1000;
+							font-size: var(--XO_size);
+				font-family: 'Courier New', Courier, monospace;
+				text-align:center;
+					cursor:pointer;
+					user-select:none;
+					transition-duration:0.5s;
+			}
 				}
-				.settings:hover{
-					transform:rotateZ(90deg)
-				}
-				.settings:active{
-					scale:-1;
-				}
-				.settingsPanel{
-					position:fixed;
-					backdrop-filter: blur(20px);
-					-webkit-backdrop-filter: blur(20px);
-					width:fit-content;
-					height:40vmin;
-					transform:translateX(-200%);
-					z-index:1000;	
-					transition-duration:1s;
-					border-radius:10%;
-					display:flex;
-					flex-direction: column ;
-					top:5vh;
-					left:5vh;
-					gap:1vh;
-					pointer-events: none;
-				}
-				.checkbox{
-					width:4em;
-					height:4em;
-					font-family: 'Courier New', Courier, monospace;
-					font-size: 5vmax;
-					pointer-events: auto;
-				}
-			</style>
-		</head>
-		<body>
+					.hideUndo{
+			display:none;
+			}
+			}
+		</style>
+	</head>
+	<body>
 
-		<div class='undoButton' onclick='remove_icon()'>UNDO</div>	
-		<div class="settings" onclick="openSettings()">⚙️</div>
-		<div class="settingsPanel"> </div>
-			<div class="page">
+	<!--<div class='scoreboard'>    --!>
+	<div class='undoButton' onclick='remove_icon()'>UNDO</div>	
+	
+		<div class="page">
 
-			</div>
-		</body>
-		<script>
-		let winning={state:false,team:'x'};
-		let settings_opened=false;
-			let Xsturn=true;//true means it's X, false means O
-			const page=document.querySelector('.page');
-			page.onmousedown=()=>{if(settings_opened)closeSettings();}
-			let columns=100;
-			let rows=100;
-			let winning_amount=4;//n meaning n+1 adjacent to win example winning_amount=4 => 5 adjacent to win
-			page.style.setProperty('--columns',columns);
-			page.style.setProperty('--rows',rows);
-			//^^set number of rows and columns of page^^^
-			window.oncontextmenu=e=>{e.preventDefault()};
-			let id=0;
-			for(let i=0;i<columns*rows;i++){
-				const square=document.createElement('div');
-				square.classList.add('square');
-				square.id=id.toString();
-				id++;
-				square.onmousedown=(e)=>{
-					if(!settings_opened){
-					draw_icon(square);
-					handle_game(square);
-				}
-				};
-				page.appendChild(square);
-			}
-		let squares=page.querySelectorAll('.square');
-		let last_square=0;
-		let fresh=true;
-		let occupied=[];
-		let lastturn=false//false means its O's turn;
-		window.onkeydown=e=>{
-		if(!fresh)
-		if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');})
-		};
-			const undoButton=document.querySelector('.undoButton');
-
-
-			function draw_icon(square){
-				fresh=false;
-			if(square.textContent==''){
-				squares[last_square].classList.remove('recent');
-				square.classList.add('recent');
-				last_square=JSON.parse(square.id);
-				if(Xsturn){
-				square.classList.remove('O');
-				square.classList.add('X');
-				square.textContent='X';
-			}
-				else{
-				square.classList.remove('X');
-				square.classList.add('O');
-				square.textContent='O';
-				}
-			Xsturn=!Xsturn;
-			if(lastturn==Xsturn){
-			undoButton.classList.remove('hideUndo');
-			}
-		winning.state=false;
-			
-			}
-			}
-			function remove_icon(){
-			target=squares[last_square];
-			if(target.textContent!='' && target.classList.contains('recent')){
-				Xsturn=target.textContent=='X'?true:target.textContent=='O'?false:false;
-			lastturn=Xsturn;
-			target.classList.remove('recent');
-			target.classList.remove('X');
-			target.classList.remove('O');
-			
-			target.classList.add('delete');
-			setTimeout(()=>{ 
-			target.textContent='';
-			target.classList.remove('delete');
-			},1000);
-			}
-			if(!winning.state)
-			undoButton.classList.add('hideUndo');
-			}
-		
-			//create settings panel
-			const settingsPanel=document.querySelector('.settingsPanel');
-			//settingsPanel.ontouchstart=settingsPanel.onclick=()=>{closeSettings();};
-			const settingsButton=document.querySelector('.settings');
-			const features=['timer','amount to win(2-9)'];
-			const types=['checkbox','text']
-			
-			for(let i=0;i<features.length;i++){
-				let checkbox=document.createElement('input');
-				let label=document.createElement('label');
-				label.textContent=features[i];
-				label.classList.add('font');
-				checkbox.id=features[i];
-				checkbox.type=types[i];
-				if(checkbox.id==features[1]){
-					checkbox.value=5;//default amount to win
-					checkbox.onclick=()=>{checkbox.value='';}
-					checkbox.onkeydown=()=>{checkbox.value='';}
-				}
-				checkbox.classList.add('checkbox');
-				checkbox.oninput=()=>{toggle(checkbox);};
-				settingsPanel.appendChild(checkbox);
-				settingsPanel.appendChild(label);
-
-			} 
-			function openSettings(){
-				settings_opened=true;
-				
-				settingsButton.style.transform='translateX(-100%)';
-				settingsPanel.style.transform='translateX(0)';
-			}
-			let settingsElements=settingsPanel.querySelectorAll('input');
-			function closeSettings(){
-				settings_opened=false;
-				settingsButton.style.transform='translateX(0)';
-				settingsPanel.style.transform='translateX(-200%)';
-				
-				if(!isNaN(settingsElements[1].value)){
-				if(settingsElements[1].value==''||JSON.parse(settingsElements[1].value)>9 ||JSON.parse(settingsElements[1].value)<2)settingsElements[1].value=5; //this is the amount to win settings
-				}
-				else if(isNaN(settingsElements[1].value))settingsElements[1].value=5;
-			}
-			function toggle(thing){
-				switch(thing.id){
-					case features[0]:
-					break;
-					case features[1]:
-					winning_amount=Math.min(Math.max(thing.value,2),9)-1;
-					if(thing.value!='')
-					thing.value=winning_amount+1;
-					break;
-				}
-			}
-			window.onload=()=>{
-				let dimensions=document.body.getBoundingClientRect();
-				window.scrollTo(dimensions.width/2,dimensions.height/2);
+		</div>
+	</body>
+	<script>
+	let winning={state:false,team:'x'};
+	
+		let Xsturn=true;//true means it's X, false means O
+		const page=document.querySelector('.page');
+		let columns=100;
+		let rows=100;
+		let winning_amount=4;//n meaning n+1 adjacent to win example winning_amount=4 => 5 adjacent to win
+		page.style.setProperty('--columns',columns);
+		page.style.setProperty('--rows',rows);
+		//^^set number of rows and columns of page^^^
+		window.oncontextmenu=e=>{e.preventDefault()};
+		let id=0;
+		for(let i=0;i<columns*rows;i++){
+			const square=document.createElement('div');
+			square.classList.add('square');
+			square.id=id.toString();
+			id++;
+			square.onmousedown=(e)=>{
+			if(e.button==0)
+				draw_icon(square);
+				handle_game(square);
 			};
-		let winning_coordinates;
-		let type;
-		function handle_game(square){
-		if(square.textContent!=''){
-		let square_id=JSON.parse(square.id);
-		let x=xcursor=square_id%rows;
-		let y=ycursor=(square_id-x)/columns;
-		type=square.textContent?square.textContent:"";
-		let adjacent_symbols=0;
-		let consecutives=check_for_consecutives(x,y,type);
-		winning_coordinates=[{x:x,y:y}];
-		//check vertially
-		//up
-		if(type=='X' || type=='O'){
-	adjacent_symbols=0;
+			page.appendChild(square);
+		}
+	let squares=page.querySelectorAll('div');
+	let last_square=0;
+	let fresh=true;
+	let occupied=[];
+	let lastturn=false//false means its O's turn;
+	window.onkeydown=e=>{
+	if(!fresh)
+	if(e.key=='r')squares.forEach(square=>{square.textContent='';square.classList.remove('recent');})
+	};
+		const undoButton=document.querySelector('.undoButton');
+		
+		
+		function draw_icon(square){
+			fresh=false;
+		if(square.textContent==''){
+			squares[last_square].classList.remove('recent');
+			square.classList.add('recent');
+			last_square=JSON.parse(square.id);
+			if(Xsturn){
+			square.classList.remove('O');
+			square.classList.add('X');
+			square.textContent='X';
+		}
+			else{
+			square.classList.remove('X');
+			square.classList.add('O');
+			square.textContent='O';
+			}
+		Xsturn=!Xsturn;
+		if(lastturn==Xsturn){
+		undoButton.classList.remove('hideUndo');
+		}
+	winning.state=false;
+		
+		}
+		}
+		function remove_icon(){
+		target=squares[last_square];
+		if(target.textContent!='' && target.classList.contains('recent')){
+			Xsturn=target.textContent=='X'?true:target.textContent=='O'?false:false;
+		lastturn=Xsturn;
+		console.log(lastturn);	
+		 target.classList.remove('recent');
+		 target.classList.remove('X');
+		 target.classList.remove('O');
+		 
+		 target.classList.add('delete');
+		setTimeout(()=>{ 
+		 target.textContent='';
+		 target.classList.remove('delete');
+		 },1000);
+		}
+		if(!winning.state)
+		undoButton.classList.add('hideUndo');
+		}
+	let winning_coordinates;
+	let type;
+	function handle_game(square){
+	let square_id=JSON.parse(square.id);
+	let x=xcursor=square_id%rows;
+	let y=ycursor=(square_id-x)/columns;
+	 type=square.textContent?square.textContent:"";
+	let adjacent_symbols=0;
+	let consecutives=check_for_consecutives(x,y,type);
+	 winning_coordinates=[{x:x,y:y}];
+	//check vertially
+	//up
+	if(type=='X' || type=='O'){
+adjacent_symbols=0;
 
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[1]){ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-		//down
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[6]){ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-	adjacent_symbols=0;
-		winning_coordinates=[{x:x,y:y}];
-		
-		//check horizontally if vertical hasnt won
-		//left
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[3]){xcursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-		//right
-		xcursor=x;ycursor=y;
-
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[4]){xcursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-	adjacent_symbols=0;
-		winning_coordinates=[{x:x,y:y}];
-		
-		//check diagonally left-right if above scenarios hasnt won
-		//upleft
-		xcursor=x;ycursor=y;
-
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[0]){xcursor--;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-		//down right
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[7]){xcursor++;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-	adjacent_symbols=0;
-		winning_coordinates=[{x:x,y:y}];
-		
-		//check diagonally right to left
-		//to right up
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[2]){xcursor++;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-		xcursor=x;ycursor=y;
-		while(true){
-		if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
-		else break;
-		}
-	adjacent_symbols=0;
-		winning_coordinates=[{x:x,y:y}];
-		
-		}
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[1]){ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
 	}
-		}
-		function win(){
-		winning.state=true;
-		last_square=0;
-		win.team=type;
-		for(let i=0;i<=winning_amount;i++){
-		squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
-		squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.animation='2s rainbow infinite';
-		squares[last_square].classList.remove('recent');
-		}
-		}
-		function check_for_consecutives(x,y,type){
-		let result=[]; 			//0 1 2
-		for(let i=0;i<8;i++){   //3 x 4 result
-								//5 6 7
-		let compared_type=move_place(x,y,i)>=0?squares[move_place(x,y,i)].textContent:'';
-		result.push(compared_type==type);
-		}
-		return result;
-		}
-		function move_place(x,y,pos){
-		if(pos==0)return (y-1)*columns+x-1;
-		if(pos==1)return (y-1)*columns+x;
-		if(pos==2)return (y-1)*columns+x+1;
-		if(pos==3)return (y)*columns+x-1;
-		if(pos==4)return (y)*columns+x+1;
-		if(pos==5)return (y+1)*columns+x-1;
-		if(pos==6)return (y+1)*columns+x;
-		if(pos==7)return (y+1)*columns+x+1;
+	//down
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[6]){ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
+	//check horizontally if vertical hasnt won
+	//left
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[3]){xcursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	//right
+	xcursor=x;ycursor=y;
+
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[4]){xcursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
+	//check diagonally left-right if above scenarios hasnt won
+	//upleft
+	xcursor=x;ycursor=y;
+
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[0]){xcursor--;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	//down right
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[7]){xcursor++;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
+	//check diagonally right to left
+	//to right up
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[2]){xcursor++;ycursor--;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+	xcursor=x;ycursor=y;
+	while(true){
+	if(check_for_consecutives(xcursor,ycursor,type)[5]){xcursor--;ycursor++;adjacent_symbols++;winning_coordinates.push({x:xcursor,y:ycursor}); if(adjacent_symbols==winning_amount){win();break;}}
+	else break;
+	}
+adjacent_symbols=0;
+	 winning_coordinates=[{x:x,y:y}];
+	
+	}
+	}
+	function win(){
+	winning.state=true;
+	last_square=0;
+	win.team=type;
+	for(let i=0;i<=winning_amount;i++){
+	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.background='lime';
+	squares[winning_coordinates[i].y*columns+winning_coordinates[i].x].style.animation='2s rainbow infinite';
+	squares[last_square].classList.remove('recent');
+	}
+	}
+	function check_for_consecutives(x,y,type){
+	let result=[]; 			//0 1 2
+	for(let i=0;i<8;i++){   //3 x 4 result
+							//5 6 7
+	let compared_type=move_place(x,y,i)>=0?squares[move_place(x,y,i)].textContent:'';
+	result.push(compared_type==type);
+	}
+	return result;
+	}
+	function move_place(x,y,pos){
+	if(pos==0)return (y-1)*columns+x-1;
+	if(pos==1)return (y-1)*columns+x;
+	if(pos==2)return (y-1)*columns+x+1;
+	if(pos==3)return (y)*columns+x-1;
+	if(pos==4)return (y)*columns+x+1;
+	if(pos==5)return (y+1)*columns+x-1;
+	if(pos==6)return (y+1)*columns+x;
+	if(pos==7)return (y+1)*columns+x+1;
 
 
-		}
-		</script>
-		</html>
+	}
+	</script>
+	</html>
