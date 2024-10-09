@@ -31,9 +31,6 @@
 					transition: 0.25s;
 					
 				}
-				.square:active{
-					background:black;
-				}
 				@keyframes fade-in {
 					from{
 						opacity:0;
@@ -229,7 +226,7 @@
 				square.classList.add('square');
 				square.id=id.toString();
 				id++;
-				square.onmousedown=square.ontouchend=(e)=>{
+				square.onmousedown=(e)=>{
 					if(!settings_opened){
 					draw_icon(square);
 					handle_game(square);
